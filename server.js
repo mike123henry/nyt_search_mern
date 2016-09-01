@@ -5,6 +5,7 @@ const express = require('express');
 let app = express();
 app.set('port', (process.env.PORT || 3001));
 
+
 //setup path package
 const path = require('path');
 app.use('/', express.static(path.join(__dirname, 'public')));

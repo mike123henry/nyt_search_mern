@@ -1,6 +1,8 @@
 const React = require('react');
 
 
+var helpers = require('./utils/helpers.js');
+
 let Main = React.createClass({
   render: function(){
     return(
@@ -15,4 +17,7 @@ let Main = React.createClass({
   }
 });
 
+//debug
+helpers.runNytApiSearch("rain");
+//end debug
 module.exports = Main;
