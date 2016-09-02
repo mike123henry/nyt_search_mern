@@ -1,9 +1,10 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 
-const Main = require('./components/Main.js');
+const Router = require('react-router').Router;
 
+const routes = require('./config/routes.js')
 ReactDOM.render(
-    <Main />,
+    <Router>{routes}</Router>,
     document.getElementById('app')
 );

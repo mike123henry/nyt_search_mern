@@ -21,8 +21,10 @@ var helpers = {
         console.log(queryURL);
         return axios.get(queryURL)
             .then(function(response){
+                console.log(JSON.stringify(response.data.response.docs[0].headline.main));
                 console.log(response.data.response.docs[0].web_url);
-                console.log(response.data);
+                console.log(response.data.response.docs[0].pub_date);
+                //console.log(response.data);
                 //return response
            })
     }
