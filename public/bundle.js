@@ -19782,7 +19782,7 @@
 	});
 
 	//debug
-	helpers.runNytApiSearch("rain");
+	helpers.runNytApiSearch("rain", "20160902", "20160901");
 	//end debug
 	module.exports = Main;
 
@@ -19797,11 +19797,24 @@
 	var nytApiKey = "1e3b1acedce6480384157b9fac9fe4e7";
 
 	var helpers = {
-	    runNytApiSearch: function runNytApiSearch(topic) {
+	    runNytApiSearch: function runNytApiSearch(topic, beginDate, endDate) {
 	        console.log(topic);
-	        var queryURLBase = "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=" + nytApiKey + "&q=" + topic;
-	        return axios.get(queryURLBase).then(function (response) {
-	            console.log(response);
+	        console.log(beginDate);
+	        //var queryURLBase = "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=" + nytApiKey + "&q=" + topic;
+	        var queryURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=" + nytApiKey;
+	        if (topic !== undefined) {
+	            queryURL = queryURL + "&q=" + topic;
+	        };
+	        if (beginDate !== undefined) {
+	            queryURL = queryURL + "&begin_date=" + beginDate;
+	            if (endDate !== undefined && endDate >= beginDate) {
+	                queryURL = queryURL + "&end_date=" + endDate;
+	            };
+	        };
+	        console.log(queryURL);
+	        return axios.get(queryURL).then(function (response) {
+	            console.log(response.data.response.docs[0].web_url);
+	            console.log(response.data);
 	            //return response
 	        });
 	    }

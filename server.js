@@ -14,6 +14,7 @@ app.use('/', express.static(path.join(__dirname, 'public')));
 const mongoose = require('mongoose');
 const logger = require('morgan');
 app.use(logger('dev'));
+let Articles = require('./models/articles.js');
 
 //setup MongoDB Config
 const dbURI = process.env.MONGODB_URI || 'mongodb://localhost/nytmern';
@@ -26,6 +27,7 @@ app.use(bodyParser.json());
 app.get('/', (request, response) =>{
     response.sendFile('./public/index.html');
 });
+
 //start server
 app.listen(app.get('port'),() => {
     console.log('Server started: http://localhost:' + app.get('port') + '/');

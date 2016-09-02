@@ -18,6 +18,6 @@ let Main = React.createClass({
 });
 
 //debug
-helpers.runNytApiSearch("rain");
+helpers.runNytApiSearch("rain","20160902", "20160901");
 //end debug
 module.exports = Main;
