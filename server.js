@@ -14,7 +14,8 @@ app.use('/', express.static(path.join(__dirname, 'public')));
 const mongoose = require('mongoose');
 const logger = require('morgan');
 app.use(logger('dev'));
-let Articles = require('./models/articles.js');
+// var Articles = require('./models/articles.js');
+// var TempArticles = require('./models/tempArticles.js');
 
 //setup MongoDB Config
 const dbURI = process.env.MONGODB_URI || 'mongodb://localhost/nytmern';

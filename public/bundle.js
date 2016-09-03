@@ -25430,6 +25430,7 @@
 
 	var helpers = __webpack_require__(224);
 	var SearchForm = __webpack_require__(244);
+	var Results = __webpack_require__(246);
 
 	var Main = React.createClass({
 	  displayName: 'Main',
@@ -25447,18 +25448,20 @@
 	    console.log("b4 if");
 	    if (prevState.searchTopic != this.state.searchTopic) {
 	      console.log("UPDATED");
-
-	      helpers.runNytApiSearch(this.state.searchTopic, this.state.searchBeginDate, this.state.searchEndDate);
-	      // .then((data)=>{
-	      //   if (data != this.state.results)
-	      //   {
-	      //     console.log("HERE");
-	      //     console.log(data);
-
-	      //     this.setState({
-	      //       results: data
-	      //     })
-	      //   }
+	      helpers.runNytApiSearch(this.state.searchTopic, this.state.searchBeginDate, this.state.searchEndDate).then(function (returnData) {
+	        console.log("main returnData");
+	        console.log(returnData);
+	        this.setState({ article0title: returnData[0][0] });
+	        this.setState({ article1title: returnData[1][0] });
+	        this.setState({ article2title: returnData[2][0] });
+	        this.setState({ article3title: returnData[3][0] });
+	        this.setState({ article4title: returnData[4][0] });
+	        this.setState({ article0url: returnData[0][1] });
+	        this.setState({ article1url: returnData[1][1] });
+	        this.setState({ article2url: returnData[2][1] });
+	        this.setState({ article3url: returnData[3][1] });
+	        this.setState({ article4url: returnData[4][1] });
+	      }.bind(this));
 	    }
 	  },
 	  setSearchTopic: function setSearchTopic(topic) {
@@ -25502,6 +25505,11 @@
 	          )
 	        ),
 	        React.createElement(SearchForm, { setSearchTopic: this.setSearchTopic, setSearchBegin: this.setSearchBegin, setSearchEnd: this.setSearchEnd })
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'row' },
+	        React.createElement(Results, { article0title: this.state.article0title, article1title: this.state.article1title, article2title: this.state.article2title, article3title: this.state.article3title, article4title: this.state.article4title, article0url: this.state.article0url, article1url: this.state.article1url, article2url: this.state.article2url, article3url: this.state.article3url, article4url: this.state.article4url })
 	      )
 	    );
 	  }
@@ -25535,12 +25543,28 @@
 	            };
 	        };
 	        console.log(queryURL);
-	        return axios.get(queryURL).then(function (response) {
+	        return axios.get(queryURL)
+	        //axios.get(queryURL)
+	        .then(function (response) {
 	            console.log(response.data.response.docs[0].headline.main);
 	            console.log(response.data.response.docs[0].web_url);
 	            console.log(response.data.response.docs[0].pub_date);
 	            //console.log(response.data);
-	            //return response
+	            var doc = response.data.response.docs;
+	            var returnData = [];
+
+	            for (var i = 0; i < doc.length; i++) {
+	                if (i < 5) {
+	                    var temp = [];
+	                    temp.push(doc[i].headline.main);
+	                    temp.push(doc[i].web_url);
+	                    temp.push(doc[i].pub_date);
+	                    returnData.push(temp);
+	                }
+	            }
+	            console.log("returnData");
+	            console.log(returnData);
+	            return returnData;
 	        });
 	    }
 	};
@@ -26833,7 +26857,7 @@
 	                  React.createElement(
 	                    "strong",
 	                    null,
-	                    "Start Date (yyyymmdd)"
+	                    "Start Date (yyyymmdd) optional"
 	                  )
 	                ),
 	                React.createElement("input", { type: "text", className: "form-control text-center", id: "searchBeginDate", onChange: this.handleChange, required: true }),
@@ -26844,7 +26868,7 @@
 	                  React.createElement(
 	                    "strong",
 	                    null,
-	                    "End Date (yyyymmdd)"
+	                    "End Date (yyyymmdd) optional"
 	                  )
 	                ),
 	                React.createElement("input", { type: "text", className: "form-control text-center", id: "searchEndDate", onChange: this.handleChange, required: true }),
@@ -26864,6 +26888,127 @@
 	});
 
 	module.exports = SearchForm;
+
+/***/ },
+/* 245 */,
+/* 246 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+
+	// This is the results component
+	var Results = React.createClass({
+	  displayName: 'Results',
+
+
+	  // Here we render the function
+	  render: function render() {
+	    console.log('here');
+	    console.log(this.props.article0url);
+	    console.log(this.props.article0title);
+	    return React.createElement(
+	      'div',
+	      { className: 'col-lg-12' },
+	      React.createElement(
+	        'div',
+	        { className: 'panel panel-default' },
+	        React.createElement(
+	          'div',
+	          { className: 'panel-heading' },
+	          React.createElement(
+	            'h3',
+	            { className: 'panel-title text-center' },
+	            'Article Results'
+	          )
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'panel-body text-left' },
+	          React.createElement(
+	            'h4',
+	            null,
+	            React.createElement(
+	              'button',
+	              { className: 'btn btn-success btn-lg', type: 'button', onClick: this.props.saveArticle },
+	              'Save'
+	            ),
+	            ' 1. ',
+	            React.createElement(
+	              'a',
+	              { href: this.props.article0url, target: '_blank' },
+	              this.props.article0title
+	            )
+	          ),
+	          React.createElement(
+	            'h4',
+	            null,
+	            React.createElement(
+	              'button',
+	              { className: 'btn btn-success btn-lg', type: 'button', onClick: this.props.saveArticle },
+	              'Save'
+	            ),
+	            ' 2. ',
+	            React.createElement(
+	              'a',
+	              { href: this.props.article1url, target: '_blank' },
+	              this.props.article1title
+	            )
+	          ),
+	          React.createElement(
+	            'h4',
+	            null,
+	            React.createElement(
+	              'button',
+	              { className: 'btn btn-success btn-lg', type: 'button', onClick: this.props.saveArticle },
+	              'Save'
+	            ),
+	            ' 3. ',
+	            React.createElement(
+	              'a',
+	              { href: this.props.article2url, target: '_blank' },
+	              this.props.article2title
+	            )
+	          ),
+	          React.createElement(
+	            'h4',
+	            null,
+	            React.createElement(
+	              'button',
+	              { className: 'btn btn-success btn-lg', type: 'button', onClick: this.props.saveArticle },
+	              'Save'
+	            ),
+	            ' 4. ',
+	            React.createElement(
+	              'a',
+	              { href: this.props.article3url, target: '_blank' },
+	              this.props.article3title
+	            )
+	          ),
+	          React.createElement(
+	            'h4',
+	            null,
+	            React.createElement(
+	              'button',
+	              { className: 'btn btn-success btn-lg', type: 'button', onClick: this.props.saveArticle },
+	              'Save'
+	            ),
+	            ' 5. ',
+	            React.createElement(
+	              'a',
+	              { href: this.props.article4url, target: '_blank' },
+	              this.props.article4title
+	            )
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+
+	// Export the component back for use in other files
+	module.exports = Results;
 
 /***/ }
 /******/ ]);

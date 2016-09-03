@@ -30,10 +30,10 @@ let SearchForm = React.createClass({
                         <h4 className="text-center"><strong>Topic to search</strong></h4>
                         <input type="text" className="form-control text-center" id="searchTopic" onChange= {this.handleChange} required/>
                         <br />
-                        <h4 className="text-center"><strong>Start Date (yyyymmdd)</strong></h4>
+                        <h4 className="text-center"><strong>Start Date (yyyymmdd) optional</strong></h4>
                         <input type="text" className="form-control text-center" id="searchBeginDate" onChange= {this.handleChange} required/>
                         <br />
-                        <h4 className="text-center"><strong>End Date (yyyymmdd)</strong></h4>
+                        <h4 className="text-center"><strong>End Date (yyyymmdd) optional</strong></h4>
                         <input type="text" className="form-control text-center" id="searchEndDate" onChange= {this.handleChange} required/>
                         <br />
                         <button type="button" className="btn btn-primary btn-block text-center" onClick={this.handleClick}>Search</button>
