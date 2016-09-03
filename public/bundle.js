@@ -25427,8 +25427,9 @@
 	'use strict';
 
 	var React = __webpack_require__(1);
+	var axios = __webpack_require__(224);
 
-	var helpers = __webpack_require__(224);
+	var helpers = __webpack_require__(243);
 	var SearchForm = __webpack_require__(244);
 	var Results = __webpack_require__(245);
 
@@ -25462,6 +25463,10 @@
 	        this.setState({ article3url: returnData[3][1] });
 	        this.setState({ article4url: returnData[4][1] });
 	      }.bind(this));
+	      // axios.post('/api', [{title: "bob2", url:"ferg2"},{title: "bob3", url:"ferg3"}])
+	      //         .then(function(results){
+	      //           console.log(results);
+	      //         })
 	    }
 	  },
 	  setSearchTopic: function setSearchTopic(topic) {
@@ -25521,75 +25526,22 @@
 /* 224 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
-
-	var axios = __webpack_require__(225);
-
-	var nytApiKey = "1e3b1acedce6480384157b9fac9fe4e7";
-
-	var helpers = {
-	    runNytApiSearch: function runNytApiSearch(topic, beginDate, endDate) {
-	        console.log(topic);
-	        console.log(beginDate);
-	        //var queryURLBase = "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=" + nytApiKey + "&q=" + topic;
-	        var queryURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=" + nytApiKey;
-	        if (topic !== undefined) {
-	            queryURL = queryURL + "&q=" + topic;
-	        };
-	        if (beginDate !== undefined) {
-	            queryURL = queryURL + "&begin_date=" + beginDate;
-	            if (endDate !== undefined && endDate >= beginDate) {
-	                queryURL = queryURL + "&end_date=" + endDate;
-	            };
-	        };
-	        console.log(queryURL);
-	        return axios.get(queryURL)
-	        //axios.get(queryURL)
-	        .then(function (response) {
-	            console.log(response.data.response.docs[0].headline.main);
-	            console.log(response.data.response.docs[0].web_url);
-	            console.log(response.data.response.docs[0].pub_date);
-	            //console.log(response.data);
-	            var doc = response.data.response.docs;
-	            var returnData = [];
-
-	            for (var i = 0; i < doc.length; i++) {
-	                if (i < 5) {
-	                    var temp = [];
-	                    temp.push(doc[i].headline.main);
-	                    temp.push(doc[i].web_url);
-	                    temp.push(doc[i].pub_date);
-	                    returnData.push(temp);
-	                }
-	            }
-	            console.log("returnData");
-	            console.log(returnData);
-	            return returnData;
-	        });
-	    }
-	};
-	module.exports = helpers;
+	module.exports = __webpack_require__(225);
 
 /***/ },
 /* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(226);
-
-/***/ },
-/* 226 */
-/***/ function(module, exports, __webpack_require__) {
-
 	'use strict';
 
-	var defaults = __webpack_require__(227);
-	var utils = __webpack_require__(228);
-	var dispatchRequest = __webpack_require__(230);
-	var InterceptorManager = __webpack_require__(239);
-	var isAbsoluteURL = __webpack_require__(240);
-	var combineURLs = __webpack_require__(241);
-	var bind = __webpack_require__(242);
-	var transformData = __webpack_require__(234);
+	var defaults = __webpack_require__(226);
+	var utils = __webpack_require__(227);
+	var dispatchRequest = __webpack_require__(229);
+	var InterceptorManager = __webpack_require__(238);
+	var isAbsoluteURL = __webpack_require__(239);
+	var combineURLs = __webpack_require__(240);
+	var bind = __webpack_require__(241);
+	var transformData = __webpack_require__(233);
 
 	function Axios(defaultConfig) {
 	  this.defaults = utils.merge({}, defaultConfig);
@@ -25678,7 +25630,7 @@
 	axios.all = function all(promises) {
 	  return Promise.all(promises);
 	};
-	axios.spread = __webpack_require__(243);
+	axios.spread = __webpack_require__(242);
 
 	// Provide aliases for supported request methods
 	utils.forEach(['delete', 'get', 'head'], function forEachMethodNoData(method) {
@@ -25706,13 +25658,13 @@
 
 
 /***/ },
-/* 227 */
+/* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(228);
-	var normalizeHeaderName = __webpack_require__(229);
+	var utils = __webpack_require__(227);
+	var normalizeHeaderName = __webpack_require__(228);
 
 	var PROTECTION_PREFIX = /^\)\]\}',?\n/;
 	var DEFAULT_CONTENT_TYPE = {
@@ -25784,7 +25736,7 @@
 
 
 /***/ },
-/* 228 */
+/* 227 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -26067,12 +26019,12 @@
 
 
 /***/ },
-/* 229 */
+/* 228 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(228);
+	var utils = __webpack_require__(227);
 
 	module.exports = function normalizeHeaderName(headers, normalizedName) {
 	  utils.forEach(headers, function processHeader(value, name) {
@@ -26085,7 +26037,7 @@
 
 
 /***/ },
-/* 230 */
+/* 229 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -26107,10 +26059,10 @@
 	        adapter = config.adapter;
 	      } else if (typeof XMLHttpRequest !== 'undefined') {
 	        // For browsers use XHR adapter
-	        adapter = __webpack_require__(231);
+	        adapter = __webpack_require__(230);
 	      } else if (typeof process !== 'undefined') {
 	        // For node use HTTP adapter
-	        adapter = __webpack_require__(231);
+	        adapter = __webpack_require__(230);
 	      }
 
 	      if (typeof adapter === 'function') {
@@ -26126,18 +26078,18 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 231 */
+/* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
-	var utils = __webpack_require__(228);
-	var buildURL = __webpack_require__(232);
-	var parseHeaders = __webpack_require__(233);
-	var transformData = __webpack_require__(234);
-	var isURLSameOrigin = __webpack_require__(235);
-	var btoa = (typeof window !== 'undefined' && window.btoa) || __webpack_require__(236);
-	var settle = __webpack_require__(237);
+	var utils = __webpack_require__(227);
+	var buildURL = __webpack_require__(231);
+	var parseHeaders = __webpack_require__(232);
+	var transformData = __webpack_require__(233);
+	var isURLSameOrigin = __webpack_require__(234);
+	var btoa = (typeof window !== 'undefined' && window.btoa) || __webpack_require__(235);
+	var settle = __webpack_require__(236);
 
 	module.exports = function xhrAdapter(resolve, reject, config) {
 	  var requestData = config.data;
@@ -26234,7 +26186,7 @@
 	  // This is only done if running in a standard browser environment.
 	  // Specifically not if we're in a web worker, or react-native.
 	  if (utils.isStandardBrowserEnv()) {
-	    var cookies = __webpack_require__(238);
+	    var cookies = __webpack_require__(237);
 
 	    // Add xsrf header
 	    var xsrfValue = config.withCredentials || isURLSameOrigin(config.url) ?
@@ -26295,12 +26247,12 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 232 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(228);
+	var utils = __webpack_require__(227);
 
 	function encode(val) {
 	  return encodeURIComponent(val).
@@ -26369,12 +26321,12 @@
 
 
 /***/ },
-/* 233 */
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(228);
+	var utils = __webpack_require__(227);
 
 	/**
 	 * Parse headers into an object
@@ -26412,12 +26364,12 @@
 
 
 /***/ },
-/* 234 */
+/* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(228);
+	var utils = __webpack_require__(227);
 
 	/**
 	 * Transform the data for a request or a response
@@ -26438,12 +26390,12 @@
 
 
 /***/ },
-/* 235 */
+/* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(228);
+	var utils = __webpack_require__(227);
 
 	module.exports = (
 	  utils.isStandardBrowserEnv() ?
@@ -26512,7 +26464,7 @@
 
 
 /***/ },
-/* 236 */
+/* 235 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -26554,7 +26506,7 @@
 
 
 /***/ },
-/* 237 */
+/* 236 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -26578,12 +26530,12 @@
 
 
 /***/ },
-/* 238 */
+/* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(228);
+	var utils = __webpack_require__(227);
 
 	module.exports = (
 	  utils.isStandardBrowserEnv() ?
@@ -26637,12 +26589,12 @@
 
 
 /***/ },
-/* 239 */
+/* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(228);
+	var utils = __webpack_require__(227);
 
 	function InterceptorManager() {
 	  this.handlers = [];
@@ -26695,7 +26647,7 @@
 
 
 /***/ },
-/* 240 */
+/* 239 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -26715,7 +26667,7 @@
 
 
 /***/ },
-/* 241 */
+/* 240 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -26733,7 +26685,7 @@
 
 
 /***/ },
-/* 242 */
+/* 241 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -26750,7 +26702,7 @@
 
 
 /***/ },
-/* 243 */
+/* 242 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -26781,6 +26733,58 @@
 	  };
 	};
 
+
+/***/ },
+/* 243 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var axios = __webpack_require__(224);
+
+	var nytApiKey = "1e3b1acedce6480384157b9fac9fe4e7";
+
+	var helpers = {
+	    runNytApiSearch: function runNytApiSearch(topic, beginDate, endDate) {
+	        console.log(topic);
+	        console.log(beginDate);
+	        //var queryURLBase = "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=" + nytApiKey + "&q=" + topic;
+	        var queryURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=" + nytApiKey;
+	        if (topic !== undefined) {
+	            queryURL = queryURL + "&q=" + topic;
+	        };
+	        if (beginDate !== undefined) {
+	            queryURL = queryURL + "&begin_date=" + beginDate;
+	            if (endDate !== undefined && endDate >= beginDate) {
+	                queryURL = queryURL + "&end_date=" + endDate;
+	            };
+	        };
+	        console.log(queryURL);
+	        return axios.get(queryURL)
+	        //axios.get(queryURL)
+	        .then(function (response) {
+	            console.log(response.data.response.docs[0].headline.main);
+	            console.log(response.data.response.docs[0].web_url);
+	            console.log(response.data.response.docs[0].pub_date);
+	            //console.log(response.data);
+	            var doc = response.data.response.docs;
+	            var returnData = [];
+	            for (var i = 0; i < doc.length; i++) {
+	                if (i < 5) {
+	                    var temp = [];
+	                    temp.push(doc[i].headline.main);
+	                    temp.push(doc[i].web_url);
+	                    temp.push(doc[i].pub_date);
+	                    returnData.push(temp);
+	                }
+	            }
+	            console.log("returnData");
+	            console.log(returnData);
+	            return returnData;
+	        });
+	    }
+	};
+	module.exports = helpers;
 
 /***/ },
 /* 244 */
@@ -26896,11 +26900,26 @@
 	'use strict';
 
 	var React = __webpack_require__(1);
+	var axios = __webpack_require__(224);
 
 	// This is the results component
 	var Results = React.createClass({
 	  displayName: 'Results',
 
+	  saveArticle: function saveArticle(event) {
+	    // console.log('event.value')
+
+	    var urlx = event.currentTarget.dataset.url;
+	    var titlex = event.currentTarget.dataset.title;
+	    axios.post('/api', { title: titlex, url: urlx }).then(function (results) {
+	      console.log("Posted to MongoDB");
+	    });
+	    //console.log(event)
+	    // console.log(this.value)
+	    // var urlx= "article"+event+"url"
+	    // console.log(urlx)
+	    //console.log(this.props.urlx)
+	  },
 
 	  // Here we render the function
 	  render: function render() {
@@ -26930,7 +26949,7 @@
 	            null,
 	            React.createElement(
 	              'button',
-	              { className: 'btn btn-success btn-lg', type: 'button', onClick: this.props.saveArticle },
+	              { className: 'btn btn-success btn-lg', value: '0', type: 'button', onClick: this.saveArticle, 'data-url': this.props.article0url, 'data-title': this.props.article0title },
 	              'Save'
 	            ),
 	            ' 1. ',
@@ -26945,7 +26964,7 @@
 	            null,
 	            React.createElement(
 	              'button',
-	              { className: 'btn btn-success btn-lg', type: 'button', onClick: this.props.saveArticle },
+	              { className: 'btn btn-success btn-lg', value: '0', type: 'button', onClick: this.saveArticle, 'data-url': this.props.article1url, 'data-title': this.props.article1title },
 	              'Save'
 	            ),
 	            ' 2. ',
@@ -26960,7 +26979,7 @@
 	            null,
 	            React.createElement(
 	              'button',
-	              { className: 'btn btn-success btn-lg', type: 'button', onClick: this.props.saveArticle },
+	              { className: 'btn btn-success btn-lg', value: '0', type: 'button', onClick: this.saveArticle, 'data-url': this.props.article2url, 'data-title': this.props.article2title },
 	              'Save'
 	            ),
 	            ' 3. ',
@@ -26975,7 +26994,7 @@
 	            null,
 	            React.createElement(
 	              'button',
-	              { className: 'btn btn-success btn-lg', type: 'button', onClick: this.props.saveArticle },
+	              { className: 'btn btn-success btn-lg', value: '0', type: 'button', onClick: this.saveArticle, 'data-url': this.props.article3url, 'data-title': this.props.article3title },
 	              'Save'
 	            ),
 	            ' 4. ',
@@ -26990,7 +27009,7 @@
 	            null,
 	            React.createElement(
 	              'button',
-	              { className: 'btn btn-success btn-lg', type: 'button', onClick: this.props.saveArticle },
+	              { className: 'btn btn-success btn-lg', value: '0', type: 'button', onClick: this.saveArticle, 'data-url': this.props.article4url, 'data-title': this.props.article4title },
 	              'Save'
 	            ),
 	            ' 5. ',

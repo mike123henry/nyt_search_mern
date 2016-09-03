@@ -1,9 +1,10 @@
 const React = require('react');
-
+var axios = require('axios');
 
 var helpers = require('./utils/helpers.js');
 var SearchForm = require('./Children/searchForm.js')
 var Results = require('./Children/resultBox.js')
+
 
 let Main = React.createClass({
   getInitialState: function(){
@@ -34,8 +35,12 @@ let Main = React.createClass({
             this.setState({article3url: returnData[3][1]});
             this.setState({article4url: returnData[4][1]});
           }.bind(this))
-
+// axios.post('/api', [{title: "bob2", url:"ferg2"},{title: "bob3", url:"ferg3"}])
+//         .then(function(results){
+//           console.log(results);
+//         })
     }
+
   },
 
   setSearchTopic(topic){

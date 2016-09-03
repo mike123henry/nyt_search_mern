@@ -2,7 +2,6 @@ const axios = require('axios');
 
 const nytApiKey = "1e3b1acedce6480384157b9fac9fe4e7";
 
-
 var helpers = {
     runNytApiSearch: function(topic, beginDate, endDate){
         console.log(topic);
@@ -28,7 +27,6 @@ var helpers = {
                 //console.log(response.data);
                 var doc = response.data.response.docs
                 var returnData = [];
-
                 for (var i = 0; i < doc.length; i++) {
                     if(i<5){
                         var temp = [];
