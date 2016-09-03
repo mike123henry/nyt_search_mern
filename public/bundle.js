@@ -25430,7 +25430,7 @@
 
 	var helpers = __webpack_require__(224);
 	var SearchForm = __webpack_require__(244);
-	var Results = __webpack_require__(246);
+	var Results = __webpack_require__(245);
 
 	var Main = React.createClass({
 	  displayName: 'Main',
@@ -26890,8 +26890,7 @@
 	module.exports = SearchForm;
 
 /***/ },
-/* 245 */,
-/* 246 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
