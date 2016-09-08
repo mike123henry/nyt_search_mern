@@ -7,6 +7,8 @@ var IndexRoute = Router.IndexRoute;
 
 var Main = require('../components/Main.js');
 
+
+
 module.exports = (
     <Route path='/' component={Main}>
 

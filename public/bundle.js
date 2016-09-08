@@ -25432,12 +25432,13 @@
 	var helpers = __webpack_require__(243);
 	var SearchForm = __webpack_require__(244);
 	var Results = __webpack_require__(245);
+	var Saved = __webpack_require__(246);
 
 	var Main = React.createClass({
 	  displayName: 'Main',
 
 	  getInitialState: function getInitialState() {
-	    console.log("getIitialState has run");
+	    //console.log("getIitialState has run");
 	    return {
 	      searchTopic: "javascript",
 	      searchBeginDate: "20160831",
@@ -25445,13 +25446,22 @@
 	      results: ""
 	    };
 	  },
+	  componentDidMount: function componentDidMount() {
+	    axios.get('/api/getSaved').then(function (response) {
+	      console.log("componentDidMount /api/getSaved response");
+	      console.log(response);
+	      this.setState({
+	        savedArticles: response.data
+	      });
+	    }.bind(this));
+	  },
 	  componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
-	    console.log("b4 if");
+	    //console.log("b4 if");
 	    if (prevState.searchTopic != this.state.searchTopic) {
-	      console.log("UPDATED");
+	      //console.log("UPDATED");
 	      helpers.runNytApiSearch(this.state.searchTopic, this.state.searchBeginDate, this.state.searchEndDate).then(function (returnData) {
-	        console.log("main returnData");
-	        console.log(returnData);
+	        //console.log("main returnData");
+	        //console.log(returnData);
 	        this.setState({ article0title: returnData[0][0] });
 	        this.setState({ article1title: returnData[1][0] });
 	        this.setState({ article2title: returnData[2][0] });
@@ -25470,19 +25480,19 @@
 	    }
 	  },
 	  setSearchTopic: function setSearchTopic(topic) {
-	    console.log("setSearchTopic ran");
+	    //console.log("setSearchTopic ran");
 	    this.setState({
 	      searchTopic: topic
 	    });
 	  },
 	  setSearchBegin: function setSearchBegin(start) {
-	    console.log("setSearchBegin ran");
+	    //console.log("setSearchBegin ran");
 	    this.setState({
 	      searchBeginDate: start
 	    });
 	  },
 	  setSearchEnd: function setSearchEnd(stop) {
-	    console.log("setSearchEnd ran");
+	    //console.log("setSearchEnd ran");
 	    this.setState({
 	      searchEndDate: stop
 	    });
@@ -25515,6 +25525,11 @@
 	        'div',
 	        { className: 'row' },
 	        React.createElement(Results, { article0title: this.state.article0title, article1title: this.state.article1title, article2title: this.state.article2title, article3title: this.state.article3title, article4title: this.state.article4title, article0url: this.state.article0url, article1url: this.state.article1url, article2url: this.state.article2url, article3url: this.state.article3url, article4url: this.state.article4url })
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'row' },
+	        React.createElement(Saved, { savedArticles: this.state.savedArticles })
 	      )
 	    );
 	  }
@@ -26745,9 +26760,9 @@
 	var nytApiKey = "1e3b1acedce6480384157b9fac9fe4e7";
 
 	var helpers = {
-	    runNytApiSearch: function runNytApiSearch(topic, beginDate, endDate) {
-	        console.log(topic);
-	        console.log(beginDate);
+	    runNytApiSearch: function runNytApiSearch(topic, beginDate, endDate, getSavedArticles) {
+	        //console.log(topic);
+	        //console.log(beginDate);
 	        //var queryURLBase = "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=" + nytApiKey + "&q=" + topic;
 	        var queryURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=" + nytApiKey;
 	        if (topic !== undefined) {
@@ -26759,13 +26774,13 @@
 	                queryURL = queryURL + "&end_date=" + endDate;
 	            };
 	        };
-	        console.log(queryURL);
+	        //console.log(queryURL);
 	        return axios.get(queryURL)
 	        //axios.get(queryURL)
 	        .then(function (response) {
-	            console.log(response.data.response.docs[0].headline.main);
-	            console.log(response.data.response.docs[0].web_url);
-	            console.log(response.data.response.docs[0].pub_date);
+	            //console.log(response.data.response.docs[0].headline.main);
+	            //console.log(response.data.response.docs[0].web_url);
+	            //console.log(response.data.response.docs[0].pub_date);
 	            //console.log(response.data);
 	            var doc = response.data.response.docs;
 	            var returnData = [];
@@ -26778,9 +26793,15 @@
 	                    returnData.push(temp);
 	                }
 	            }
-	            console.log("returnData");
-	            console.log(returnData);
+	            //console.log("returnData")
+	            //console.log(returnData)
 	            return returnData;
+	        });
+	    },
+	    getSaved: function getSaved() {
+	        return axios.get('/api').then(function (savedReturned) {
+	            console.log("helpers.getSaved got");
+	            console.log(savedReturned);
 	        });
 	    }
 	};
@@ -26799,14 +26820,14 @@
 
 
 	  handleChange: function handleChange(event) {
-	    console.log("handleChange ran");
-	    console.log(event);
+	    //console.log("handleChange ran");
+	    //console.log(event);
 	    var newState = {};
 	    newState[event.target.id] = event.target.value;
 	    this.setState(newState);
 	  },
 	  handleClick: function handleClick() {
-	    console.log("handleClick ran");
+	    //console.log("handleClick ran");
 	    this.props.setSearchTopic(this.state.searchTopic);
 	    this.props.setSearchBegin(this.state.searchBeginDate);
 	    this.props.setSearchEnd(this.state.searchEndDate);
@@ -26912,20 +26933,16 @@
 	    var urlx = event.currentTarget.dataset.url;
 	    var titlex = event.currentTarget.dataset.title;
 	    axios.post('/api', { title: titlex, url: urlx }).then(function (results) {
-	      console.log("Posted to MongoDB");
+	      console.log("resultBox.js Posted to MongoDB");
+	      console.log(results);
 	    });
-	    //console.log(event)
-	    // console.log(this.value)
-	    // var urlx= "article"+event+"url"
-	    // console.log(urlx)
-	    //console.log(this.props.urlx)
 	  },
 
 	  // Here we render the function
 	  render: function render() {
-	    console.log('here');
-	    console.log(this.props.article0url);
-	    console.log(this.props.article0title);
+	    //console.log('here')
+	    //console.log(this.props.article0url);
+	    //console.log(this.props.article0title);
 	    return React.createElement(
 	      'div',
 	      { className: 'col-lg-12' },
@@ -26949,7 +26966,7 @@
 	            null,
 	            React.createElement(
 	              'button',
-	              { className: 'btn btn-success btn-lg', value: '0', type: 'button', onClick: this.saveArticle, 'data-url': this.props.article0url, 'data-title': this.props.article0title },
+	              { className: 'btn btn-success btn-sm', value: '0', type: 'button', onClick: this.saveArticle, 'data-url': this.props.article0url, 'data-title': this.props.article0title },
 	              'Save'
 	            ),
 	            ' 1. ',
@@ -26964,7 +26981,7 @@
 	            null,
 	            React.createElement(
 	              'button',
-	              { className: 'btn btn-success btn-lg', value: '0', type: 'button', onClick: this.saveArticle, 'data-url': this.props.article1url, 'data-title': this.props.article1title },
+	              { className: 'btn btn-success btn-sm', value: '0', type: 'button', onClick: this.saveArticle, 'data-url': this.props.article1url, 'data-title': this.props.article1title },
 	              'Save'
 	            ),
 	            ' 2. ',
@@ -26979,7 +26996,7 @@
 	            null,
 	            React.createElement(
 	              'button',
-	              { className: 'btn btn-success btn-lg', value: '0', type: 'button', onClick: this.saveArticle, 'data-url': this.props.article2url, 'data-title': this.props.article2title },
+	              { className: 'btn btn-success btn-sm', value: '0', type: 'button', onClick: this.saveArticle, 'data-url': this.props.article2url, 'data-title': this.props.article2title },
 	              'Save'
 	            ),
 	            ' 3. ',
@@ -26994,7 +27011,7 @@
 	            null,
 	            React.createElement(
 	              'button',
-	              { className: 'btn btn-success btn-lg', value: '0', type: 'button', onClick: this.saveArticle, 'data-url': this.props.article3url, 'data-title': this.props.article3title },
+	              { className: 'btn btn-success btn-sm', value: '0', type: 'button', onClick: this.saveArticle, 'data-url': this.props.article3url, 'data-title': this.props.article3title },
 	              'Save'
 	            ),
 	            ' 4. ',
@@ -27009,7 +27026,7 @@
 	            null,
 	            React.createElement(
 	              'button',
-	              { className: 'btn btn-success btn-lg', value: '0', type: 'button', onClick: this.saveArticle, 'data-url': this.props.article4url, 'data-title': this.props.article4title },
+	              { className: 'btn btn-success btn-sm', value: '0', type: 'button', onClick: this.saveArticle, 'data-url': this.props.article4url, 'data-title': this.props.article4title },
 	              'Save'
 	            ),
 	            ' 5. ',
@@ -27027,6 +27044,85 @@
 
 	// Export the component back for use in other files
 	module.exports = Results;
+
+/***/ },
+/* 246 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+	var axios = __webpack_require__(224);
+
+	// This is the results component
+	var SavedArticles = React.createClass({
+	  displayName: 'SavedArticles',
+
+	  getInitialState: function getInitialState() {
+	    return {
+	      savedArticles: []
+	    };
+	  },
+	  displaySaved: function displaySaved(event) {},
+	  clickToDelete: function clickToDelete(result) {
+	    this.props.deleteArticle(result);
+	  },
+	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+	    var that = this;
+	    console.log("SavedArticles nextProps = ");
+	    console.log(nextProps);
+	    var myResults = nextProps.savedArticles.map(function (search, i) {
+	      //var boundClick = that.clickToDelete.bind(that, search);
+	      //  return <div className="list-group-item" key={i}><a href={search.url} target="_blank">{search.title}</a><br />{search.date}<br /><button type="button" className="btn btn-success" style={{'float': 'right', 'marginTop': '-39px'}} onClick={boundClick}>Delete</button></div>
+	      return React.createElement(
+	        'div',
+	        { className: 'list-group-item', key: i },
+	        React.createElement(
+	          'a',
+	          { href: search.url, target: '_blank' },
+	          search.title
+	        )
+	      );
+	    });
+
+	    this.setState({ savedArticles: myResults });
+	  },
+
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      { className: 'row' },
+	      React.createElement(
+	        'div',
+	        { className: 'col-sm-12' },
+	        React.createElement(
+	          'div',
+	          { className: 'panel panel-default' },
+	          React.createElement(
+	            'div',
+	            { className: 'panel-heading' },
+	            React.createElement(
+	              'h3',
+	              { className: 'panel-title text-center' },
+	              React.createElement(
+	                'strong',
+	                null,
+	                'Saved Articles'
+	              )
+	            )
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'panel-body' },
+	            this.state.savedArticles
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+
+	module.exports = SavedArticles;
 
 /***/ }
 /******/ ]);

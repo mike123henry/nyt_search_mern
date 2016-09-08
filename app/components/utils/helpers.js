@@ -3,9 +3,9 @@ const axios = require('axios');
 const nytApiKey = "1e3b1acedce6480384157b9fac9fe4e7";
 
 var helpers = {
-    runNytApiSearch: function(topic, beginDate, endDate){
-        console.log(topic);
-        console.log(beginDate);
+    runNytApiSearch: function(topic, beginDate, endDate, getSavedArticles){
+        //console.log(topic);
+        //console.log(beginDate);
         //var queryURLBase = "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=" + nytApiKey + "&q=" + topic;
         var queryURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=" + nytApiKey;
         if (topic !== undefined){
@@ -17,13 +17,13 @@ var helpers = {
                 queryURL =  queryURL + "&end_date=" + endDate ;
             };
         };
-        console.log(queryURL);
+        //console.log(queryURL);
         return axios.get(queryURL)
         //axios.get(queryURL)
             .then(function(response){
-                console.log(response.data.response.docs[0].headline.main);
-                console.log(response.data.response.docs[0].web_url);
-                console.log(response.data.response.docs[0].pub_date);
+                //console.log(response.data.response.docs[0].headline.main);
+                //console.log(response.data.response.docs[0].web_url);
+                //console.log(response.data.response.docs[0].pub_date);
                 //console.log(response.data);
                 var doc = response.data.response.docs
                 var returnData = [];
@@ -36,10 +36,17 @@ var helpers = {
                         returnData.push(temp);
                     }
                 }
-                console.log("returnData")
-                console.log(returnData)
+                //console.log("returnData")
+                //console.log(returnData)
                 return returnData
            })
+    },
+    getSaved: function(){
+        return axios.get('/api')
+         .then(function(savedReturned){
+              console.log("helpers.getSaved got");
+              console.log(savedReturned);
+         })
     }
 }
 module.exports = helpers;

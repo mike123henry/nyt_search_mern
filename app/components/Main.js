@@ -2,13 +2,13 @@ const React = require('react');
 var axios = require('axios');
 
 var helpers = require('./utils/helpers.js');
-var SearchForm = require('./Children/searchForm.js')
-var Results = require('./Children/resultBox.js')
-
+var SearchForm = require('./Children/searchForm.js');
+var Results = require('./Children/resultBox.js');
+var Saved = require('./Children/savedArticles.js');
 
 let Main = React.createClass({
   getInitialState: function(){
-    console.log("getIitialState has run");
+    //console.log("getIitialState has run");
       return{
         searchTopic: "javascript",
         searchBeginDate: "20160831",
@@ -16,14 +16,24 @@ let Main = React.createClass({
         results: ""
       }
   },
+    componentDidMount: function(){
+    axios.get('/api/getSaved')
+      .then(function(response){
+        console.log("componentDidMount /api/getSaved response");
+        console.log(response);
+        this.setState({
+          savedArticles: response.data
+        });
+      }.bind(this));
+  },
   componentDidUpdate(prevProps, prevState){
-    console.log("b4 if");
+    //console.log("b4 if");
     if(prevState.searchTopic != this.state.searchTopic){
-      console.log("UPDATED");
+      //console.log("UPDATED");
       helpers.runNytApiSearch(this.state.searchTopic,this.state.searchBeginDate,this.state.searchEndDate)
          .then(function(returnData){
-            console.log("main returnData");
-            console.log(returnData);
+            //console.log("main returnData");
+            //console.log(returnData);
             this.setState({article0title: returnData[0][0]});
             this.setState({article1title: returnData[1][0]});
             this.setState({article2title: returnData[2][0]});
@@ -44,21 +54,21 @@ let Main = React.createClass({
   },
 
   setSearchTopic(topic){
-    console.log("setSearchTopic ran");
+    //console.log("setSearchTopic ran");
     this.setState({
       searchTopic: topic
     })
   },
 
 setSearchBegin(start){
-  console.log("setSearchBegin ran");
+  //console.log("setSearchBegin ran");
     this.setState({
       searchBeginDate: start
     })
 },
 
 setSearchEnd(stop){
-  console.log("setSearchEnd ran");
+  //console.log("setSearchEnd ran");
     this.setState({
       searchEndDate: stop
     })
@@ -75,6 +85,9 @@ setSearchEnd(stop){
         </div>
         <div className="row">
           <Results article0title={this.state.article0title} article1title={this.state.article1title} article2title={this.state.article2title} article3title={this.state.article3title} article4title={this.state.article4title} article0url={this.state.article0url} article1url={this.state.article1url} article2url={this.state.article2url} article3url={this.state.article3url} article4url={this.state.article4url}/>
+        </div>
+        <div className="row">
+          <Saved savedArticles={this.state.savedArticles} />
         </div>
       </div>
     )

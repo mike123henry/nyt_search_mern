@@ -31,14 +31,14 @@ db.once('open', function () {
 //setup body-parser
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
-//app.use(bodyParser.urlencoded({extend: true}));
+app.use(bodyParser.urlencoded({extended: true}));
 
 //Main route, redirect to the react portion of the app (because of the bundle.js file)
 app.get('/', (request, response) =>{
     response.sendFile('./public/index.html');
 });
 
-app.get('/api/', function(req, res) {
+app.get('/api/all/json', function(req, res) {
 
   // This GET request will search for the latest clickCount
   Articles.find({})
@@ -53,22 +53,41 @@ app.get('/api/', function(req, res) {
     })
 });
 
+app.get('/api/getSaved', function(req, res) {
+
+  // This GET request will search for the latest clickCount
+  Articles.find({})
+    .exec(function(err, doc){
+
+      if(err){
+        console.log(err);
+      }
+      else {
+        console.log("/api/getSaved doc = ");
+        console.log(doc);
+        res.send(doc);
+      }
+    })
+});
 app.post('/api/', function(req, res){
-    console.log(req.body)
-  var newArticles = new Articles(req.body);
-
-
-  // Note how this route utilizes the findOneAndUpdate function to update the clickCount.
-  newArticles.save(function(err){
-
-    if(err){
-      console.log(err);
-    }
-
-    else{
-        res.send("Updated Click Count!");
-    }
-  });
+  // console.log("*****************************************start post /api/");
+  // console.log("*****title = "+req.body.title);
+  // console.log("*****url = "+req.body.url);
+  // console.log("**************************************end body");
+  // console.log("*************************************end post /api/");
+  var newArticles = new Articles({title: req.body.title, url: req.body.url, saved: true});
+  newArticles.save(
+  //   //this function does nothing WHY??>?
+  //   function(err){
+  //   if(err){
+  //     console.log("inside .save err");
+  //     console.log(err);
+  //   }
+  //   else{
+  //       res.send("Updated Click Count!");
+  //   }
+  // }
+  );
 
 });
 //start server
