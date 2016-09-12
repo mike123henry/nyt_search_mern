@@ -25432,7 +25432,7 @@
 	var helpers = __webpack_require__(243);
 	var SearchForm = __webpack_require__(244);
 	var Results = __webpack_require__(245);
-	var Saved = __webpack_require__(246);
+	//var Saved = require('./Children/savedArticles.js');
 
 	var Main = React.createClass({
 	  displayName: 'Main',
@@ -25448,8 +25448,19 @@
 	  },
 	  componentDidMount: function componentDidMount() {
 	    axios.get('/api/getSaved').then(function (response) {
-	      console.log("componentDidMount /api/getSaved response");
+	      console.log("Main.js componentDidMount /api/getSaved response");
 	      console.log(response);
+	      console.log('Main.js componentDidMount after response');
+	      this.setState({
+	        savedArticles: response.data
+	      });
+	    }.bind(this));
+	  },
+	  updateSavedArticles: function updateSavedArticles(results) {
+	    axios.get('/api/getSaved').then(function (response) {
+	      console.log("Main.js updateSavedArticles /api/getSaved response");
+	      console.log(response);
+	      console.log('Main.js updateSavedArticles after response');
 	      this.setState({
 	        savedArticles: response.data
 	      });
@@ -25473,10 +25484,15 @@
 	        this.setState({ article3url: returnData[3][1] });
 	        this.setState({ article4url: returnData[4][1] });
 	      }.bind(this));
-	      // axios.post('/api', [{title: "bob2", url:"ferg2"},{title: "bob3", url:"ferg3"}])
-	      //         .then(function(results){
-	      //           console.log(results);
-	      //         })
+	      console.log("this.state.savedArticles ");
+	      console.log(this.state.savedArticles.length);
+	      console.log("after this.state.savedArticles ");
+	      if (prevState.savedArticles != this.state.savedArticles) {
+	        console.log("prevState.savedArticles !=");
+	        this.updateSavedArticles;
+	      } else {
+	        console.log("else prevState.savedArticles ==");
+	      }
 	    }
 	  },
 	  setSearchTopic: function setSearchTopic(topic) {
@@ -25524,18 +25540,17 @@
 	      React.createElement(
 	        'div',
 	        { className: 'row' },
-	        React.createElement(Results, { article0title: this.state.article0title, article1title: this.state.article1title, article2title: this.state.article2title, article3title: this.state.article3title, article4title: this.state.article4title, article0url: this.state.article0url, article1url: this.state.article1url, article2url: this.state.article2url, article3url: this.state.article3url, article4url: this.state.article4url })
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'row' },
-	        React.createElement(Saved, { savedArticles: this.state.savedArticles })
+	        React.createElement(Results, { article0title: this.state.article0title, article1title: this.state.article1title, article2title: this.state.article2title, article3title: this.state.article3title, article4title: this.state.article4title, article0url: this.state.article0url, article1url: this.state.article1url, article2url: this.state.article2url, article3url: this.state.article3url, article4url: this.state.article4url, updateSavedArticles: this.updateSavedArticles, savedArticles: this.state.savedArticles })
 	      )
 	    );
 	  }
 	});
 
 	module.exports = Main;
+
+	/*       <div className="row">
+	         <Saved savedArticles={this.state.savedArticles} />
+	       </div>*/
 
 /***/ },
 /* 224 */
@@ -26820,14 +26835,14 @@
 
 
 	  handleChange: function handleChange(event) {
-	    //console.log("handleChange ran");
+	    //console.log("searchForm.js handleChange ran");
 	    //console.log(event);
 	    var newState = {};
 	    newState[event.target.id] = event.target.value;
 	    this.setState(newState);
 	  },
 	  handleClick: function handleClick() {
-	    //console.log("handleClick ran");
+	    //console.log("searchForm.js handleClick ran");
 	    this.props.setSearchTopic(this.state.searchTopic);
 	    this.props.setSearchBegin(this.state.searchBeginDate);
 	    this.props.setSearchEnd(this.state.searchEndDate);
@@ -26923,24 +26938,53 @@
 	var React = __webpack_require__(1);
 	var axios = __webpack_require__(224);
 
+	var Saved = __webpack_require__(246);
 	// This is the results component
 	var Results = React.createClass({
 	  displayName: 'Results',
 
-	  saveArticle: function saveArticle(event) {
-	    // console.log('event.value')
 
+	  saveArticle: function saveArticle(event) {
+	    console.log('resultsBox.js saveArticle event.value');
+	    console.log(event);
+	    var that = this;
 	    var urlx = event.currentTarget.dataset.url;
 	    var titlex = event.currentTarget.dataset.title;
-	    axios.post('/api', { title: titlex, url: urlx }).then(function (results) {
+	    return axios.post('/api', { title: titlex, url: urlx }).then(function (results) {
 	      console.log("resultBox.js Posted to MongoDB");
+
+	      axios.get('/api/getSaved');
+
 	      console.log(results);
+	      that.props.updateSavedArticles(results.data);
+	      console.log("resultBox.js that.props.updateSavedArticles(");
+	      console.log(that.props.updateSavedArticles);
+	      console.log("end resultBox.js that.props.updateSavedArticles(");
+	    }).catch(function (err) {
+	      console.log("resultBox.js this is an error", err);
 	    });
+	  },
+
+	  updateSavedArticles: function updateSavedArticles() {
+	    axios.get('/api/getSaved').then(function (response) {
+	      console.log("resultsBox.js updateSavedArticles /api/getSaved response");
+	      console.log(response);
+	      console.log('resultsBox.js after response xxx');
+	      this.setState({
+	        savedArticles: response.data
+	      });
+	    }.bind(this));
+	  },
+	  componentWillReceiveProps: function componentWillReceiveProps(propsxx) {
+	    console.log('resultsBox.js propsxx');
+	    console.log(propsxx.savedArticles);
+	    console.log('resultsBox.js end propsxx');
+	    this.setState({ savedArticles: propsxx.savedArticles });
 	  },
 
 	  // Here we render the function
 	  render: function render() {
-	    //console.log('here')
+	    //console.log('resultsBox.js here')
 	    //console.log(this.props.article0url);
 	    //console.log(this.props.article0title);
 	    return React.createElement(
@@ -26981,7 +27025,7 @@
 	            null,
 	            React.createElement(
 	              'button',
-	              { className: 'btn btn-success btn-sm', value: '0', type: 'button', onClick: this.saveArticle, 'data-url': this.props.article1url, 'data-title': this.props.article1title },
+	              { className: 'btn btn-success btn-sm', value: '1', type: 'button', onClick: this.saveArticle, 'data-url': this.props.article1url, 'data-title': this.props.article1title },
 	              'Save'
 	            ),
 	            ' 2. ',
@@ -26996,7 +27040,7 @@
 	            null,
 	            React.createElement(
 	              'button',
-	              { className: 'btn btn-success btn-sm', value: '0', type: 'button', onClick: this.saveArticle, 'data-url': this.props.article2url, 'data-title': this.props.article2title },
+	              { className: 'btn btn-success btn-sm', value: '2', type: 'button', onClick: this.saveArticle, 'data-url': this.props.article2url, 'data-title': this.props.article2title },
 	              'Save'
 	            ),
 	            ' 3. ',
@@ -27011,7 +27055,7 @@
 	            null,
 	            React.createElement(
 	              'button',
-	              { className: 'btn btn-success btn-sm', value: '0', type: 'button', onClick: this.saveArticle, 'data-url': this.props.article3url, 'data-title': this.props.article3title },
+	              { className: 'btn btn-success btn-sm', value: '3', type: 'button', onClick: this.saveArticle, 'data-url': this.props.article3url, 'data-title': this.props.article3title },
 	              'Save'
 	            ),
 	            ' 4. ',
@@ -27026,7 +27070,7 @@
 	            null,
 	            React.createElement(
 	              'button',
-	              { className: 'btn btn-success btn-sm', value: '0', type: 'button', onClick: this.saveArticle, 'data-url': this.props.article4url, 'data-title': this.props.article4title },
+	              { className: 'btn btn-success btn-sm', value: '4', type: 'button', onClick: this.saveArticle, 'data-url': this.props.article4url, 'data-title': this.props.article4title },
 	              'Save'
 	            ),
 	            ' 5. ',
@@ -27036,6 +27080,11 @@
 	              this.props.article4title
 	            )
 	          )
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'row' },
+	          React.createElement(Saved, { savedArticles: this.props.savedArticles, updateSavedArticles: this.props.updateSavedArticles })
 	        )
 	      )
 	    );
@@ -27068,10 +27117,13 @@
 	    this.props.deleteArticle(result);
 	  },
 	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-	    var that = this;
-	    console.log("SavedArticles nextProps = ");
-	    console.log(nextProps);
+	    //var that = this;
+	    //console.log("savedArticles.js nextProps = ");
+	    //console.log(nextProps);
+	    console.log("savedArticles.js props received", nextProps);
 	    var myResults = nextProps.savedArticles.map(function (search, i) {
+	      //console.log("i = ");
+	      //console.log(i);
 	      //var boundClick = that.clickToDelete.bind(that, search);
 	      //  return <div className="list-group-item" key={i}><a href={search.url} target="_blank">{search.title}</a><br />{search.date}<br /><button type="button" className="btn btn-success" style={{'float': 'right', 'marginTop': '-39px'}} onClick={boundClick}>Delete</button></div>
 	      return React.createElement(

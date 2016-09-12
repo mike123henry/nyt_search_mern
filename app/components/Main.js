@@ -4,7 +4,7 @@ var axios = require('axios');
 var helpers = require('./utils/helpers.js');
 var SearchForm = require('./Children/searchForm.js');
 var Results = require('./Children/resultBox.js');
-var Saved = require('./Children/savedArticles.js');
+//var Saved = require('./Children/savedArticles.js');
 
 let Main = React.createClass({
   getInitialState: function(){
@@ -16,11 +16,23 @@ let Main = React.createClass({
         results: ""
       }
   },
-    componentDidMount: function(){
+  componentDidMount: function(){
     axios.get('/api/getSaved')
       .then(function(response){
-        console.log("componentDidMount /api/getSaved response");
+        console.log("Main.js componentDidMount /api/getSaved response");
         console.log(response);
+        console.log('Main.js componentDidMount after response');
+        this.setState({
+          savedArticles: response.data
+        });
+      }.bind(this));
+  },
+  updateSavedArticles: function(results){
+   axios.get('/api/getSaved')
+      .then(function(response){
+        console.log("Main.js updateSavedArticles /api/getSaved response");
+        console.log(response);
+        console.log('Main.js updateSavedArticles after response');
         this.setState({
           savedArticles: response.data
         });
@@ -45,10 +57,13 @@ let Main = React.createClass({
             this.setState({article3url: returnData[3][1]});
             this.setState({article4url: returnData[4][1]});
           }.bind(this))
-// axios.post('/api', [{title: "bob2", url:"ferg2"},{title: "bob3", url:"ferg3"}])
-//         .then(function(results){
-//           console.log(results);
-//         })
+         console.log("this.state.savedArticles ");
+         console.log(this.state.savedArticles.length);
+         console.log("after this.state.savedArticles ");
+      if(prevState.savedArticles != this.state.savedArticles){
+        console.log("prevState.savedArticles !=");
+        this.updateSavedArticles
+      }else {console.log("else prevState.savedArticles ==")}
     }
 
   },
@@ -84,14 +99,16 @@ setSearchEnd(stop){
           <SearchForm setSearchTopic={this.setSearchTopic} setSearchBegin={this.setSearchBegin} setSearchEnd={this.setSearchEnd}/>
         </div>
         <div className="row">
-          <Results article0title={this.state.article0title} article1title={this.state.article1title} article2title={this.state.article2title} article3title={this.state.article3title} article4title={this.state.article4title} article0url={this.state.article0url} article1url={this.state.article1url} article2url={this.state.article2url} article3url={this.state.article3url} article4url={this.state.article4url}/>
+          <Results article0title={this.state.article0title} article1title={this.state.article1title} article2title={this.state.article2title} article3title={this.state.article3title} article4title={this.state.article4title} article0url={this.state.article0url} article1url={this.state.article1url} article2url={this.state.article2url} article3url={this.state.article3url} article4url={this.state.article4url} updateSavedArticles={this.updateSavedArticles} savedArticles={this.state.savedArticles}/>
         </div>
-        <div className="row">
-          <Saved savedArticles={this.state.savedArticles} />
-        </div>
+
       </div>
     )
   }
 });
 
 module.exports = Main;
+
+ /*       <div className="row">
+          <Saved savedArticles={this.state.savedArticles} />
+        </div>*/

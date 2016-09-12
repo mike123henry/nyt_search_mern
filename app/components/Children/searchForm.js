@@ -3,14 +3,14 @@ const React = require('react');
 let SearchForm = React.createClass({
 
   handleChange: function(event){
-    //console.log("handleChange ran");
+    //console.log("searchForm.js handleChange ran");
     //console.log(event);
     var newState = {};
     newState[event.target.id] = event.target.value;
     this.setState(newState);
   },
   handleClick: function(){
-    //console.log("handleClick ran");
+    //console.log("searchForm.js handleClick ran");
     this.props.setSearchTopic(this.state.searchTopic);
     this.props.setSearchBegin(this.state.searchBeginDate);
     this.props.setSearchEnd(this.state.searchEndDate);

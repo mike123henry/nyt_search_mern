@@ -54,7 +54,7 @@ app.get('/api/all/json', function(req, res) {
 });
 
 app.get('/api/getSaved', function(req, res) {
-
+  console.log("server.js /api/getSaved has run  ")
   // This GET request will search for the latest clickCount
   Articles.find({})
     .exec(function(err, doc){
@@ -69,14 +69,17 @@ app.get('/api/getSaved', function(req, res) {
       }
     })
 });
-app.post('/api/', function(req, res){
+app.post('/api', function(req, res){
   // console.log("*****************************************start post /api/");
   // console.log("*****title = "+req.body.title);
   // console.log("*****url = "+req.body.url);
   // console.log("**************************************end body");
   // console.log("*************************************end post /api/");
   var newArticles = new Articles({title: req.body.title, url: req.body.url, saved: true});
-  newArticles.save(
+  newArticles.save().then(function(err, response){
+    console.log("running from serverjs")
+    res.json(response);
+  })
   //   //this function does nothing WHY??>?
   //   function(err){
   //   if(err){
@@ -87,7 +90,6 @@ app.post('/api/', function(req, res){
   //       res.send("Updated Click Count!");
   //   }
   // }
-  );
 
 });
 //start server
